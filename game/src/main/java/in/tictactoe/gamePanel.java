@@ -4,24 +4,31 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class gamePanel extends JPanel implements ActionListener {
-    private boolean turn = true;
+    private boolean player;
     private Board board;
     private boolean gameover = false;
     private Game thisGame;
+    private boolean played = false;
+    private audio sound=new audio();
+    private Thread soundThread;
 
-    gamePanel(Game game) {
+    gamePanel(Game game, boolean turn2, boolean first) {
         thisGame = game;
+        player = turn2;
         setBackground(Color.BLACK);
         setLayout(new GridLayout(3, 3));
         board = new Board(this);
         board.draw(this);
         setVisible(true);
-        moveAi();
+        if (!first) {
+            moveAi();
+        }
+        soundThread=new Thread(sound);
+        soundThread.start();  
     }
 
     /**
@@ -42,15 +49,26 @@ public class gamePanel extends JPanel implements ActionListener {
         if (gameover) {
             return;
         }
-        if (!turn) {
-            turn = board.move(turn, e.getActionCommand(), true);
-            int result = board.result();
-            if (board.isGameOver()) {
-                gameOver(result);
-                return;
+        if (!played) {
+            boolean valid = false;
+            for (Object move : board.getValidMoves()) {
+                if (e.getActionCommand().equals((String) move)) {
+                    valid = true;
+                }
             }
-            turn = true;
-            moveAi();
+            if (valid) {
+                sound.click();
+                System.out.println(Thread.activeCount());
+                board.move(player, e.getActionCommand(), true);
+                int result = board.result();
+                if (board.isGameOver()) {
+                    gameOver(result);
+                    return;
+                }
+                played = true;
+                
+                moveAi();
+            }
         }
 
     }
@@ -67,6 +85,7 @@ public class gamePanel extends JPanel implements ActionListener {
      */
     private void gameOver(int result) {
         gameover = true;
+        sound.stop();
         if (result == 0) {
             printM("Its a Draw");
         } else if (result == 1) {
@@ -74,8 +93,8 @@ public class gamePanel extends JPanel implements ActionListener {
         } else {
             printM("O won the game ");
         }
+        new menu();
         thisGame.endGame();
-        App.main(null);
     }
 
     /**
@@ -84,14 +103,13 @@ public class gamePanel extends JPanel implements ActionListener {
      * over conditions, and updates the turn.
      */
     public void moveAi() {
-        System.out.println(turn);
-        AI.move(board, turn);
+        AI.move(board, !player);
         int result = board.result();
         if (board.isGameOver()) {
             gameOver(result);
             return;
         }
-        turn = false;
+        played = false;
     }
 
     /**

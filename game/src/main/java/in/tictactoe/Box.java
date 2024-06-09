@@ -18,7 +18,7 @@ public class Box extends JButton {
     Box(String text){
        setActionCommand(text);
        setBackground(Color.white);
-       setBorder(new LineBorder(Color.RED));
+       setBorder(new LineBorder(Color.DARK_GRAY));
        setFocusable(false);
        setIcon(new ImageIcon("game\\src\\main\\java\\in\\tictactoe\\assets\\b.png"));
     }

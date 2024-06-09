@@ -20,10 +20,10 @@ public class Game extends JFrame {
     // `Game` class. Inside the constructor, the `setWindow()` method is called to
     // set up the JFrame window
     // with a title, size, layout, and default close operation.
-    Game() {
+    Game(boolean turn, boolean first) {
         setWindow();
         // New game
-        g = new gamePanel(this);
+        g = new gamePanel(this,turn,first);
         add(g, BorderLayout.CENTER);
         setVisible(true);
     }

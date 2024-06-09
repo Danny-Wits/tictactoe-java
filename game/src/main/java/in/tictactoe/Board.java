@@ -1,11 +1,12 @@
 package in.tictactoe;
 
 import java.util.ArrayList;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 public class Board {
-
+ 
     // The code snippet you provided in the `Board` class is defining a private 2D
     // array `map` of type
     // `Box` with dimensions 3x3. This array represents the game board in a
@@ -28,9 +29,9 @@ public class Board {
             for (int j = 0; j < map.length; j++) {
                 map[i][j] = new Box(Integer.toString(i) + Integer.toString(j));
                 map[i][j].addActionListener(g);
-                ;
             }
         }
+      
     }
 
     /**
@@ -80,10 +81,9 @@ public class Board {
      *         of the current turn. If the location is not empty, it simply returns
      *         the current turn.
      */
-    public boolean move(boolean turn, String location, boolean UI) {
+    public void move(boolean turn, String location, boolean UI) {
         int i = Integer.parseInt(location.substring(0, 1));
         int j = Integer.parseInt(location.substring(1));
-
         if (map[i][j].isEmpty()) {
             // System.out.print(location + " | ");
             // System.out.print(i);
@@ -95,9 +95,9 @@ public class Board {
                 map[i][j].setIcon(img);
             }
             map[i][j].setValue(turn);
-            return !turn;
+
         }
-        return turn;
+        
     }
 
     /**

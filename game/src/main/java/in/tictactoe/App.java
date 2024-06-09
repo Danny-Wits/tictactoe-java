@@ -5,9 +5,9 @@ package in.tictactoe;
  *
  */
 public class App 
-{
+{   
     public static void main( String[] args )
     {
-        new Game();
+        new menu();
     }
 }
